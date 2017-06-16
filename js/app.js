@@ -9,6 +9,8 @@
 	let playerName1;
 	let playerName2;
 	let insertName;
+	let playerX;
+	let playerXName;
 	const player1 = document.getElementById('player1');
 	const box = document.getElementsByClassName('boxes')[0].children;
 	const endButton = document.getElementsByClassName('button')[1];
@@ -19,7 +21,7 @@
 		board.style.display = 'none';
 		$('#start header h1').after(inputName);
 		let player = $('#player');
-		let playerX = $('#playerX');
+		playerX = $('#playerX');
 		$('#player').focus();
 	})
 
@@ -69,9 +71,13 @@
 				x.className += ' box-filled-1';
 				player1.className = 'players';
 				player2.className = 'players active';
+				
 				endCounter++;
 				checkEnd();
-				vsComputer();
+				if (endCounter < 9) {
+					vsComputer();
+				}
+				
 			} else if (player1.className === 'players active') {
 				x.className += ' box-filled-1';
 				player1.className = 'players';
@@ -132,7 +138,11 @@
 		finish.style.display = '';
 		finish.className = 'screen screen-win screen-win-two'
 		board.style.display = 'none';
+		if (document.getElementById('versus').checked) {
+			document.getElementsByClassName('message')[0].textContent = 'Darn, it seems the supercomputer won';
+		} else {
 		document.getElementsByClassName('message')[0].textContent = "Congrats " + playerXName + ' . You are the winner.';
+		}
 	}
 
 	function tie () {
@@ -153,18 +163,24 @@
 	})
 	
 	function preventWin (x, y, z) {
-		if (x.className == 'box box-filled-1' && y.className == 'box box-filled-1') {
+		if (x.className == 'box box-filled-1' && y.className == 'box box-filled-1' && z.className != 'box box-filled-2') {
 			z.className = 'box box-filled-2';
 			checkEnd();
+			endCounter++;
 			activateO();
-		} else if (x.className == 'box box-filled-1' && z.className == 'box box-filled-1') {
+			return true;
+		} else if (x.className == 'box box-filled-1' && z.className == 'box box-filled-1' && y.className != 'box box-filled-2') {
 			y.className = 'box box-filled-2';
 			checkEnd();
+			endCounter++;
 			activateO();
-		} else if (y.className == 'box box-filled-1' && z.className == 'box box-filled-1') {
+			return true;
+		} else if (y.className == 'box box-filled-1' && z.className == 'box box-filled-1' && x.className != 'box box-filled-2') {
 			x.className = 'box box-filled-2';
 			checkEnd();
+			endCounter++;
 			activateO();
+			return true;
 		} else {
 			return false;
 		}
@@ -174,35 +190,47 @@
 		if (x.className === 'box') {
 			x.className = 'box box-filled-2';
 			checkEnd();
+			
 			activateO();
 		}
 	}
 
 	function vsComputer () {
 		if (player2.className === 'players active') {
+			console.log('the amount is ' + endCounter);
 			let preventChecker = preventWin(box[0], box[1], box[2]);
 			if (preventChecker === false) {
+				console.log('Didnt blocked top row');
 				preventChecker = preventWin(box[3], box[4], box[5]);
 				if (preventChecker === false) {
+					console.log('Didnt blocked middle row');
 					preventChecker = preventWin(box[6], box[7], box[8]);
 					if (preventChecker === false) {
+						console.log('Didnt blocked bottom row');
 						preventChecker = preventWin(box[0], box[3], box[6]);
 						if (preventChecker === false) {
+							console.log('Didnt blocked left column');
 							preventChecker = preventWin(box[1], box[4], box[7]);
 							if (preventChecker === false) {
+								console.log('Didnt blocked middle column');
 								preventChecker = preventWin(box[2], box[5], box[8]);
 									if (preventChecker === false) {
+										console.log('Didnt blocked right column');
 										preventChecker = preventWin(box[0], box[4], box[8]);
 											if (preventChecker === false) {
+												console.log('Didnt blocked 0-8 diagnol');
 												preventChecker = preventWin(box[2], box[4], box[6]);
-											} if (preventChecker === false) {
-												console.log('final if');
-												while (true) {
-													let randomNum = Math.floor(Math.random() * 9);
-													console.log(randomNum);
-													if (box[randomNum].className != 'box box-filled-1' || box[randomNum].className != 'box box-filled-2') {
-														makeMove(box[randomNum]);
-														break;
+											 	if (preventChecker === false) {
+													 console.log('Didnt blocked 2-6 diagnol');
+													 endCounter++;
+													while (endCounter < 9) {
+														let randomNum = Math.floor(Math.random() * 9);
+														console.log(randomNum);
+														if (box[randomNum].className != 'box box-filled-1' && box[randomNum].className != 'box box-filled-2') {
+															console.log('making move ___________________');
+															makeMove(box[randomNum]);
+															break;
+														}
 													}
 												}
 											}
