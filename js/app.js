@@ -68,30 +68,34 @@
 //if vs computer after the click assign the value to player O and do Computer turn
 		x.addEventListener('click', function boxFilled() {
 			if (player1.className === 'players active' && document.getElementById('versus').checked) {
-				x.className += ' box-filled-1';
-				player1.className = 'players';
-				player2.className = 'players active';
-				endCounter++;
-				checkEnd();
-				if (endCounter < 9) {
-					vsComputer();
-				}
-			x.removeEventListener('click', boxFilled);
+				if (x.className != 'box box-filled-1' && x.className != 'box box-filled-2') {
+					x.className += ' box-filled-1';
+					player1.className = 'players';
+					player2.className = 'players active';
+					endCounter++;
+					checkEnd();
+					if (endCounter < 9) {
+						vsComputer();
+					}
+				}	
 //if 2 player after click assign the value to player O and make it player 2 turn
 			} else if (player1.className === 'players active') {
-				x.className += ' box-filled-1';
-				player1.className = 'players';
-				player2.className = 'players active';
-				endCounter++;
-				checkEnd();
-			x.removeEventListener('click', boxFilled);
+				if (x.className != 'box box-filled-1' && x.className != 'box box-filled-2') {
+					x.className += ' box-filled-1';
+					player1.className = 'players';
+					player2.className = 'players active';
+					endCounter++;
+					checkEnd();
+				}
 //if player 2 turn switch to player 1 turn
 			} else {
-				x.className += ' box-filled-2';
-				activateO();
-				endCounter++;
-				checkEnd();
-				x.removeEventListener('click', boxFilled);
+				if (x.className != 'box box-filled-1' && x.className != 'box box-filled-2') {
+					x.className += ' box-filled-2';
+					activateO();
+					endCounter++;b
+					checkEnd();
+				}
+				
 			}
 		})
 	}
@@ -166,6 +170,7 @@
 			hovering(box[i]);
 			clicking(box[i]);
 		}
+		console.log('new game START');
 	})
 //FOR AI = check if 2 in a row are selected by opponent and block their victory
 	function preventWin (x, y, z) {
