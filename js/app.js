@@ -14,8 +14,6 @@
 	let versusAi;
 	const player1 = document.getElementById('player1');
 	const player2 = document.getElementById('player2');
-	let player1ClassString = player1.className;
-	let player2ClassString = player2.className;
 	const box = document.getElementsByClassName('boxes')[0].children;
 	const endButton = document.getElementsByClassName('button')[1];
 	const message = document.getElementsByClassName('message')[0];
@@ -66,7 +64,7 @@
 //place background images when hovering over a box depedning on player turn
 	function hovering (boxes) {
 		boxes.addEventListener('mouseover', () => {
-			if (player1ClassString.includes('active')) {
+			if (player1.className.includes('active')) {
 				boxes.style.backgroundImage = 'url("img/o.svg")'
 			} else {
 				boxes.style.backgroundImage = 'url("img/x.svg")'
@@ -100,7 +98,7 @@
 					}
 				}
 //if 2 player after click assign the value to player O and make it player 2 turn
-			} else if (player1ClassString.includes('active')) {
+			} else if (player1.className.includes('active')) {
 				if (isBoxEmpty(boxes) == true) {
 					boxes.className += ' box-filled-1';
 					activeOrInactive(player1);
@@ -188,7 +186,8 @@
 			box[i].className = 'box';
 		}
 		endCounter = 0;
-		activateO();
+		player1.className = 'players active';
+		player2.className = 'players';
 		for (let i = 0; i < 9; i++) {
 			hovering(box[i]);
 			clicking(box[i]);
@@ -198,19 +197,19 @@
 //FOR AI = check if 2 in a row are selected by opponent and block their victory
 	function preventWin (first, second, third) {
 		if (first.className.includes('box-filled-1') && second.className.includes('box-filled-1') && third.className.includes('box-filled-2') == false) {
-			third.className = 'box box-filled-2';
+			third.className += ' box-filled-2';
 			checkEnd();
 			endCounter++;
 			activateO();
 			return true;
 		} else if (first.className.includes('box-filled-1') && third.className.includes('box-filled-1') && second.className.includes('box-filled-2') == false) {
-			second.className += 'box-filled-2';
+			second.className += ' box-filled-2';
 			checkEnd();
 			endCounter++;
 			activateO();
 			return true;
 		} else if (second.className.includes('box-filled-1') && third.className.includes('box-filled-1') && first.className.includes('box-filled-2') == false) {
-			first.className += 'box-filled-2';
+			first.className += ' box-filled-2';
 			checkEnd();
 			endCounter++;
 			activateO();
