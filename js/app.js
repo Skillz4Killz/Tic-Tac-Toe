@@ -97,7 +97,7 @@
 					if (endCounter < 9) {
 						vsComputer();
 					}
-				}	
+				}
 //if 2 player after click assign the value to player O and make it player 2 turn
 			} else if (player1ClassString.includes('active')) {
 				if (isBoxEmpty(boxes) == true) {
