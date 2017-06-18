@@ -8,70 +8,90 @@
 	let playerName1;
 	let playerName2;
 	let insertName;
+	const player2;
+	let player;
 	let playerX;
 	let playerXName;
+	let versusAi;
 	const player1 = document.getElementById('player1');
+	let player1ClassString = player1.className;
+	let player2ClassString = player2.className;
 	const box = document.getElementsByClassName('boxes')[0].children;
 	const endButton = document.getElementsByClassName('button')[1];
+
 	// on page load prepare start screen and make input for names and checkbox focus on name
 	$(document).ready(() => {
-		finish.style.display = 'none';
-		board.style.display = 'none';
+		finish.style.visibility = 'hidden';
+		board.style.visibility = 'hidden';
 		$('#start header h1').after(inputName);
-		let player = $('#player');
-		playerX = $('#playerX');
-		$('#player').focus();
+		player = document.getElementById('player');
+		playerX = document.getElementById('playerX');
+		versusAi = document.getElementById('versus');
+		player.focus();
 	})
-//when star clicked choose which program
+	function activeOrInactive (player) {
+		if (player.includes('active')) {
+			player.className = 'players'
+		} else {
+			player.className = 'players active'
+		}
+	}
+	function prepareBoard() {
+		playerName = player.value;
+		board.style.visibility = 'visible';
+		start.style.display = 'hidden';
+		insertName = '<h2>Player Name = ' + playerName + '</h2>';
+		$('#board header h1').after(insertName);
+		activeOrInactive(player1);
+	}
+//when start clicked choose which program
 	startButton.addEventListener('click', () => {
 //Player vs Computer program initiate
-		if (player.value != '' && document.getElementById('versus').checked) {
-			playerName = player.value;
-			board.style.display = '';
-			start.style.display = 'none';
-			insertName = '<h2>Player Name = ' + playerName + '</h2>';
-			$('#board header h1').after(insertName);
-			player1.className += ' active';
+		if (player.value != '' && versusAi.checked) {
+			prepaeBorerd();
 //player vs player program initiate
-		} else if (player.value != '' && playerX.value != '' && document.getElementById('versus').checked == false) {
-			playerName = player.value;
+		} else if (player.value != '' && playerX.value != '' && versusAi.checked == false) {
+			prepareBoard();
 			playerXName = playerX.value;
-			board.style.display = '';
-			start.style.display = 'none';
-			insertName = '<h2>Player O Name = ' + playerName + '</h2>';
-			$('#board header h1').after(insertName);
 			insertName = '<h2>Player X Name = ' + playerXName + '</h2>';
 			$('#board header h1').after(insertName);
-			player1.className += ' active';
 //throw error when no name entered
 		} else {
-			$('#player').focus();
+			player.focus();
 			player.style.borderColor = 'red';
 			playerX.style.borderColor = 'red';
 		}
 	})
 //place background images when hovering over a box depedning on player turn
-	function hovering (x) {
-		x.addEventListener('mouseover', () => {
-			if (player1.className === 'players active') {
-				x.style.backgroundImage = 'url("img/o.svg")'
+	function hovering (boxes) {
+		boxes.addEventListener('mouseover', () => {
+			if (player1ClassString.includes('active')) {
+				boxes.style.backgroundImage = 'url("img/o.svg")'
 			} else {
-				x.style.backgroundImage = 'url("img/x.svg")'
+				boxes.style.backgroundImage = 'url("img/x.svg")'
 			}
-			x.addEventListener('mouseout', () => {
-				x.style.backgroundImage = ''
+			boxes.addEventListener('mouseout', () => {
+				boxes.style.backgroundImage = ''
 			})
 		})
 	}
+	function isBoxEmpty (boxes) {
+		if (boxes.className.include('box-filled-1') && boxes.include('box-filled-2')) {
+			return true
+		} else if (boxes.className.include('box-filled-1') == false && boxes.include('box-filled-2') == false) {
+			return false
+		}
+
+	}
 //run program based on which game type 2 player/computer
-	function clicking (x) {
+	function clicking (boxes) {
 //if vs computer after the click assign the value to player O and do Computer turn
-		x.addEventListener('click', function boxFilled() {
+		boxes.addEventListener('click', function boxFilled() {
 			if (player1.className === 'players active' && document.getElementById('versus').checked) {
-				if (x.className != 'box box-filled-1' && x.className != 'box box-filled-2') {
-					x.className += ' box-filled-1';
-					player1.className = 'players';
-					player2.className = 'players active';
+				if (boxes.className.include('box-filled-1') == false && boxes.include('box-filled-2') == false) {
+					boxes.className += ' box-filled-1';
+					activeOrInactive(player1);
+					activeOrInactive(player2);
 					endCounter++;
 					checkEnd();
 					if (endCounter < 9) {
@@ -79,9 +99,9 @@
 					}
 				}	
 //if 2 player after click assign the value to player O and make it player 2 turn
-			} else if (player1.className === 'players active') {
-				if (x.className != 'box box-filled-1' && x.className != 'box box-filled-2') {
-					x.className += ' box-filled-1';
+			} else if (player1ClassString.includes('active')) {
+				if (isBoxEmpty(boxes) == true) {
+					boxes.className += ' box-filled-1';
 					player1.className = 'players';
 					player2.className = 'players active';
 					endCounter++;
